@@ -1,0 +1,23 @@
+{
+  "name": "@isayme/dingtalk-robot",
+  "version": "0.1.0",
+  "description": "",
+  "main": "dist/bark.js",
+  "types": "dist/bark.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "clean": "rm -rf dist"
+  },
+  "keywords": [
+    "Bark"
+  ],
+  "author": "isayme <isaymeorg@gmail.com>",
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^20.10.6",
+    "axios": "^1.6.3",
+    "axios-retry": "^4.0.0",
+    "ts-node": "^10.9.2",
+    "typescript": "^5.3.3"
+  }
+}
