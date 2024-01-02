@@ -1,5 +1,5 @@
 {
-  "name": "@isayme/dingtalk-robot",
+  "name": "@isayme/bark",
   "version": "0.1.0",
   "description": "",
   "main": "dist/bark.js",
