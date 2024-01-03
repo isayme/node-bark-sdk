@@ -1,9 +1,26 @@
 import axios, { AxiosInstance } from 'axios'
 import axiosRetry from 'axios-retry'
+import { encrypt } from './aes'
+
+interface CbcEncryptInfo {
+  method: 'aes-128-cbc' | 'aes-192-cbc' | 'aes-256-cbc'
+  // 128: 16字符；192: 24字符; 256: 32字符
+  key: string
+  iv: string
+}
+
+interface EcbEncryptInfo {
+  method: 'aes-128-ecb' | 'aes-192-ecb' | 'aes-256-ecb'
+  // 128: 16字符；192: 24字符; 256: 32字符
+  key: string
+  // ecb 不需要 iv
+  iv?: null
+}
 
 interface ConstructorOptions {
   deviceKey: string
   url?: string
+  encrypt?: CbcEncryptInfo | EcbEncryptInfo
   timeout?: number
   retries?: number
 }
@@ -121,6 +138,7 @@ class Client {
   #url?: string
   #timeout: number
   #retries: number
+  #encrypt?: CbcEncryptInfo | EcbEncryptInfo
   #axiosInstance: AxiosInstance
 
   constructor(opts: ConstructorOptions) {
@@ -132,6 +150,8 @@ class Client {
 
     this.#timeout = opts.timeout || 3000
     this.#retries = opts.retries || 10
+
+    this.#encrypt = opts.encrypt
 
     this.#createAxiosInstance()
   }
@@ -178,7 +198,20 @@ class Client {
     })
   }
 
-  request(data: object) {
+  request(body: object) {
+    let data = body
+    if (this.#encrypt) {
+      let { method, key, iv } = this.#encrypt
+      data = {
+        ciphertext: encrypt(
+          method,
+          key,
+          iv || null,
+          JSON.stringify(body),
+        ).toString('base64'),
+      }
+    }
+
     return this.#axiosInstance
       .request({
         method: 'POST',

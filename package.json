@@ -1,6 +1,6 @@
 {
   "name": "@isayme/bark",
-  "version": "0.1.2",
+  "version": "0.2.0",
   "description": "",
   "main": "dist/bark.js",
   "types": "dist/bark.d.ts",
