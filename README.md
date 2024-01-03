@@ -2,8 +2,9 @@ Node SDK for Bark (https://bark.day.app/)
 
 # 特性
 
-- 自动重试, 默认 10 次；
+- 支持 Basic Auth；
 - 支持加密推送；
+- 自动重试, 默认 10 次；
 
 # 快速使用
 

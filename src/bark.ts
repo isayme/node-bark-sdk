@@ -17,9 +17,15 @@ interface EcbEncryptInfo {
   iv?: null
 }
 
+interface BasicAuth {
+  user: string
+  password: string
+}
+
 interface ConstructorOptions {
   deviceKey: string
   url?: string
+  auth?: BasicAuth
   encrypt?: CbcEncryptInfo | EcbEncryptInfo
   timeout?: number
   retries?: number
@@ -138,6 +144,7 @@ class Client {
   #url?: string
   #timeout: number
   #retries: number
+  #auth?: BasicAuth
   #encrypt?: CbcEncryptInfo | EcbEncryptInfo
   #axiosInstance: AxiosInstance
 
@@ -151,6 +158,7 @@ class Client {
     this.#timeout = opts.timeout || 3000
     this.#retries = opts.retries || 10
 
+    this.#auth = opts.auth
     this.#encrypt = opts.encrypt
 
     this.#createAxiosInstance()
@@ -212,17 +220,32 @@ class Client {
       }
     }
 
+    // basic auth
+    let auth = undefined
+    if (this.#auth) {
+      auth = {
+        username: this.#auth.user,
+        password: this.#auth.password,
+      }
+    }
+
     return this.#axiosInstance
       .request({
         method: 'POST',
         url: this.#url,
         timeout: this.#timeout,
+        auth,
         headers: {
           'Content-Type': 'application/json',
         },
         data: JSON.stringify(data),
       })
       .then((resp) => {
+        let status = resp.status
+        if (status === 418) {
+          throw new Error(`request bark fail, basic auth not match`)
+        }
+
         let { code, message } = resp.data
         if (code !== 200) {
           throw new Error(
