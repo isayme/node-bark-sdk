@@ -33,7 +33,7 @@ async function main() {
   await client.push('这是测试内容')
   await client.push('这是测试标题', '这是测试内容')
   await client.push({
-    title: '这是测试内容',
+    title: '这是测试标题',
     body: '这是测试内容',
   })
 }
