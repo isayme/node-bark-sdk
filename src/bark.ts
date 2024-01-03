@@ -82,12 +82,12 @@ interface IBarkPushReq {
   /**
    * iOS14.5以下自动复制推送内容，iOS14.5以上需手动长按推送或下拉推送
    */
-  autoCopy?: boolean
+  autoCopy?: 1
 
   /**
    * 复制推送时，指定复制的内容，不传此参数将复制整个推送内容。
    */
-  copy?: boolean
+  copy?: string
 
   /**
    * 可以为推送设置不同的铃声
